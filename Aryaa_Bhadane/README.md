@@ -11,7 +11,6 @@ cp .env.example .env
 npm run dev
 ```
 
-Set `SESSION_SECRET` in `.env` to a long random value. `PORT` defaults to `5000` locally. Start the production server with `npm start`.
 
 ## API endpoints
 
@@ -34,13 +33,8 @@ Cart endpoints require the session created by login. Product/cart mutations are 
 
 ## Render deployment
 
-1. Push this repository to GitHub.
-2. Create a Render **Web Service** and connect the repository.
-3. Set **Root Directory** to `Aryaa_Bhadane`.
-4. Use build command `npm install` and start command `node server.js` (or `npm start`).
-5. Add a `SESSION_SECRET` environment variable in Render. Do not set `PORT`; Render supplies it.
 
-Deployed URL: `https://your-render-service.onrender.com` (replace after deployment).
+Deployed URL: https://ecommerce-product-cart-api.onrender.com 
 
 ### JSON persistence limitation
 
