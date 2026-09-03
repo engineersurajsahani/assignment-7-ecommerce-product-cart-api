@@ -7,6 +7,9 @@ const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 
 const app = express();
+// Render terminates HTTPS at its proxy. This lets express-session recognize
+// the original request as secure when production cookies are enabled.
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(logger);
 app.use(session({
