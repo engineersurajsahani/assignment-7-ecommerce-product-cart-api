@@ -1,0 +1,9 @@
+[
+  {
+    "id": "usr_3428c77a-94a8-4339-b28d-4ae7b4897b53",
+    "username": "Verifier",
+    "email": "verification.user@example.com",
+    "passwordHash": "$2b$12$kFjRuhoQ0Bt6F/A2b/a3.uLT4VWnlBTW1hVBuNs/ZHlknX6cWukaO",
+    "createdAt": "2026-09-03T14:22:53.234Z"
+  }
+]
