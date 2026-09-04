@@ -4,6 +4,10 @@
 
 ---
 
+### Live Link : https://assignment-7-ecommerce-product-cart-api.onrender.com/
+
+---
+
 ## 📌 1. Objective & Overview
 
 Build a lightweight, production-structured **E-Commerce Product Catalog & Shopping Cart REST API** using **Node.js** and **Express.js**, persisting data directly in structured JSON files via Node's asynchronous file system module (`fs/promises`). This assignment reinforces core backend fundamentals: multi-criteria filtering, cart calculations (totals, discounts, stock validation), user session management, and custom middleware design without relying on a full database engine.
