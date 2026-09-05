@@ -1,0 +1,56 @@
+[
+  {
+    "id": "prod_101",
+    "name": "Wireless Noise-Canceling Headphones",
+    "category": "Electronics",
+    "price": 2999,
+    "stock": 15,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "prod_102",
+    "name": "Mechanical RGB Gaming Keyboard",
+    "category": "Electronics",
+    "price": 1899,
+    "stock": 25,
+    "rating": 4.5,
+    "createdAt": "2026-03-01T11:00:00.000Z"
+  },
+  {
+    "id": "prod_103",
+    "name": "Ergonomic Memory Foam Office Chair Cushion",
+    "category": "Office",
+    "price": 899,
+    "stock": 40,
+    "rating": 4.2,
+    "createdAt": "2026-03-01T12:00:00.000Z"
+  },
+  {
+    "id": "prod_104",
+    "name": "Stainless Steel Thermal Water Bottle 1L",
+    "category": "Fitness",
+    "price": 599,
+    "stock": 50,
+    "rating": 4.8,
+    "createdAt": "2026-03-01T13:00:00.000Z"
+  },
+  {
+    "id": "prod_105",
+    "name": "Ultra-Slim 20000mAh Power Bank",
+    "category": "Electronics",
+    "price": 1499,
+    "stock": 10,
+    "rating": 4.4,
+    "createdAt": "2026-03-01T14:00:00.000Z"
+  },
+  {
+    "id": "prod_106",
+    "name": "Adjustable Aluminum Laptop Stand",
+    "category": "Accessories",
+    "price": 799,
+    "stock": 30,
+    "rating": 4.7,
+    "createdAt": "2026-03-01T15:00:00.000Z"
+  }
+]
