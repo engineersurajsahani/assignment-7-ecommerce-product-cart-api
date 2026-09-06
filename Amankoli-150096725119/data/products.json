@@ -1,0 +1,47 @@
+[
+  {
+    "id": "prod_101",
+    "name": "Wireless Noise-Canceling Headphones",
+    "category": "Electronics",
+    "price": 2999,
+    "stock": 15,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "prod_102",
+    "name": "Mechanical RGB Gaming Keyboard",
+    "category": "Electronics",
+    "price": 1899,
+    "stock": 25,
+    "rating": 4.8,
+    "createdAt": "2026-03-01T11:00:00.000Z"
+  },
+  {
+    "id": "prod_103",
+    "name": "Ergonomic Office Chair",
+    "category": "Furniture",
+    "price": 7499,
+    "stock": 8,
+    "rating": 4.4,
+    "createdAt": "2026-03-01T12:00:00.000Z"
+  },
+  {
+    "id": "prod_104",
+    "name": "Stainless Steel Thermal Water Bottle 1L",
+    "category": "Lifestyle",
+    "price": 699,
+    "stock": 40,
+    "rating": 4.7,
+    "createdAt": "2026-03-01T13:00:00.000Z"
+  },
+  {
+    "id": "prod_105",
+    "name": "4K Ultra-HD Monitor 27-inch",
+    "category": "Electronics",
+    "price": 18500,
+    "stock": 5,
+    "rating": 4.9,
+    "createdAt": "2026-03-01T14:00:00.000Z"
+  }
+]
