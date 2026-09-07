@@ -1,190 +1,517 @@
-# 🛒 Assignment 07: E-Commerce Product & Shopping Cart API
-> **Track:** Backend Development | **Level:** Beginner to Intermediate | **Estimated Time:** 5–7 Hours  
-> **Tech Stack:** Node.js, Express.js, JSON / File-System Data Storage (`fs/promises`), bcryptjs, Express-Session
+# Assignment 07: E-Commerce Product & Shopping Cart API
 
----
+A lightweight E-Commerce Product Catalog and Shopping Cart REST API built using Node.js and Express.js.
 
-## 📌 1. Objective & Overview
+This project provides product management, product filtering and sorting, user authentication, shopping cart functionality, stock validation, checkout processing, session-based authentication, and JSON file-system persistence.
 
-Build a lightweight, production-structured **E-Commerce Product Catalog & Shopping Cart REST API** using **Node.js** and **Express.js**, persisting data directly in structured JSON files via Node's asynchronous file system module (`fs/promises`). This assignment reinforces core backend fundamentals: multi-criteria filtering, cart calculations (totals, discounts, stock validation), user session management, and custom middleware design without relying on a full database engine.
+## 1. Project Overview
 
-### Key Learning Outcomes:
-- Asynchronous file I/O operations using Node's `fs/promises` (`readFile`, `writeFile`).
-- Building dynamic search and filtering engines (Category, Price Range, In-Stock, Sorting).
-- Managing stateful shopping cart sessions tied to authenticated users.
-- Implementing inventory reservation checks before items are added to a cart.
-- Designing reusable validation and logging middleware.
+The objective of this project is to build a production-structured backend REST API for an E-Commerce application.
 
----
+The application allows users to:
 
-## 🛠️ 2. Tech Stack & Dependencies
+- Register an account
+- Login and logout using session-based authentication
+- View available products
+- Search and filter products
+- Sort products by price
+- View individual product details
+- Add products to a shopping cart
+- Remove products from the cart
+- Validate product stock before adding items
+- Calculate cart totals
+- Checkout and update product stock
+- Persist application data using JSON files
 
-```bash
-# Initialize Node.js project
-npm init -y
+The project uses asynchronous file-system operations for data persistence.
 
-# Install runtime dependencies
-npm install express bcryptjs express-session dotenv uuid
+## 2. Technology Stack
 
-# Install development dependencies
-npm install -D nodemon
-```
+- Node.js
+- Express.js
+- JavaScript
+- JSON File-System Storage
+- fs/promises
+- bcryptjs
+- Express-Session
+- dotenv
+- uuid
+- Nodemon
 
----
+## 3. Project Structure
 
-## 🗄️ 3. JSON Data Schemas & Entities
+PallaviSarovar/
+└── itm-assignment-07-ecommerce-api/
+    ├── controllers/
+    │   ├── authController.js
+    │   ├── cartController.js
+    │   └── productController.js
+    │
+    ├── data/
+    │   ├── carts.json
+    │   ├── products.json
+    │   └── users.json
+    │
+    ├── middleware/
+    │   ├── adminGuard.js
+    │   ├── authGuard.js
+    │   ├── logger.js
+    │   └── validateProduct.js
+    │
+    ├── routes/
+    │   ├── authRoutes.js
+    │   ├── cartRoutes.js
+    │   └── productRoutes.js
+    │
+    ├── utils/
+    │   └── fileHelper.js
+    │
+    ├── .env.example
+    ├── .gitignore
+    ├── package.json
+    ├── package-lock.json
+    ├── server.js
+    └── README.md
 
-Data will be persisted in `./data/products.json`, `./data/users.json`, and `./data/carts.json`.
+## 4. Data Storage
 
-### 📦 Product Entity (`data/products.json`)
-```json
-[
-  {
-    "id": "prod_101",
-    "name": "Wireless Noise-Canceling Headphones",
-    "category": "Electronics",
-    "price": 2999,
-    "stock": 15,
-    "rating": 4.6,
-    "createdAt": "2026-03-01T10:00:00.000Z"
-  }
-]
-```
+The application stores its data in JSON files.
 
-### 🛍️ Cart Entity (`data/carts.json`)
-```json
-[
-  {
-    "userId": "usr_001",
-    "items": [
-      {
-        "productId": "prod_101",
-        "name": "Wireless Noise-Canceling Headphones",
-        "unitPrice": 2999,
-        "quantity": 2,
-        "itemTotal": 5998
-      }
-    ],
-    "cartTotal": 5998,
-    "updatedAt": "2026-03-01T11:30:00.000Z"
-  }
-]
-```
+### Products
 
----
+Location:
 
-## 📋 4. API Endpoints Specification
+data/products.json
 
-### 🔐 User Authentication
+The products file contains product information such as:
 
-| Method | Endpoint | Description | Request Body Example | Status Codes |
-|---|---|---|---|---|
-| `POST` | `/api/auth/register` | Register customer with hashed password | `{"username":"alex","email":"alex@shop.com","password":"password123"}` | `201 Created`<br>`400 Bad Request` |
-| `POST` | `/api/auth/login` | Authenticate customer and create session | `{"email":"alex@shop.com","password":"password123"}` | `200 OK`<br>`401 Unauthorized` |
-| `POST` | `/api/auth/logout` | Terminate session | None | `200 OK` |
+- Product ID
+- Product name
+- Category
+- Price
+- Stock quantity
+- Rating
 
-### 📦 Product Catalog Management
+Sample products include:
 
-| Method | Endpoint | Query Parameters | Description | Request Body Example | Status Codes |
-|---|---|---|---|---|---|
-| `GET` | `/api/products` | `?category=Electronics&minPrice=1000&maxPrice=5000&sort=price_asc` | Filter & search products | None | `200 OK` |
-| `GET` | `/api/products/:id` | None | Fetch single product by ID | None | `200 OK`<br>`404 Not Found` |
-| `POST` | `/api/products` | None | Add a new product (Admin route) | `{"name":"Mechanical Keyboard","category":"Electronics","price":1899,"stock":25,"rating":4.5}` | `201 Created`<br>`400 Bad Request` |
-| `PUT` | `/api/products/:id` | None | Update price or stock count | `{"stock":30,"price":1799}` | `200 OK`<br>`404 Not Found` |
-| `DELETE` | `/api/products/:id` | None | Remove product from store | None | `200 OK`<br>`404 Not Found` |
+- Wireless Headphones
+- Mechanical Keyboard
+- Running Shoes
+- Smart Water Bottle
+- Portable SSD 1TB
 
-### 🛒 Shopping Cart System (Authenticated)
+### Users
 
-| Method | Endpoint | Description | Request Body Example | Status Codes |
-|---|---|---|---|---|
-| `GET` | `/api/cart` | View current user's cart with calculated total | None | `200 OK` |
-| `POST` | `/api/cart/items` | Add product to cart (Validates stock availability) | `{"productId":"prod_101","quantity":1}` | `200 OK`<br>`400 Out of Stock` |
-| `DELETE` | `/api/cart/items/:productId` | Remove specific product from cart | None | `200 OK`<br>`404 Not in Cart` |
-| `POST` | `/api/cart/checkout` | Simulate order placement & decrement product stock | None | `200 OK`<br>`400 Empty Cart` |
+Location:
 
----
+data/users.json
 
-## 🏗️ 5. Project Folder Architecture
+User information is stored in JSON format.
 
-```text
-assignment-07-ecommerce-api/
-├── data/
-│   ├── carts.json
-│   ├── products.json
-│   └── users.json
-├── controllers/
-│   ├── authController.js
-│   ├── cartController.js
-│   └── productController.js
-├── middleware/
-│   ├── authGuard.js         # Check req.session.user exists
-│   ├── logger.js            # Request logger
-│   └── validateProduct.js   # Verify price > 0, stock >= 0
-├── routes/
-│   ├── authRoutes.js
-│   ├── cartRoutes.js
-│   └── productRoutes.js
-├── utils/
-│   └── fileHelper.js        # readJSONFile, writeJSONFile wrappers
-├── .env.example
-├── .gitignore
-├── package.json
-├── server.js
-└── README.md
-```
+Passwords are securely hashed using bcryptjs before being stored.
 
----
+### Carts
 
-## ⚙️ 6. Core Implementation Guide: Asynchronous File Helper
+Location:
 
-```javascript
-// utils/fileHelper.js
-const fs = require('fs/promises');
-const path = require('path');
+data/carts.json
 
-const readData = async (filename) => {
-  const filePath = path.join(__dirname, '../data', filename);
-  try {
-    const data = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
-};
+Shopping cart information includes:
 
-const writeData = async (filename, data) => {
-  const filePath = path.join(__dirname, '../data', filename);
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
-};
+- User ID
+- Product ID
+- Unit price
+- Quantity
+- Item total
+- Cart total
 
-module.exports = { readData, writeData };
-```
+## 5. Installation
 
----
+Clone or download the project and navigate to the project directory.
 
-## 🧪 7. Testing & Verification
+Install the required dependencies:
 
-1. Seed `data/products.json` with 5 products across different categories.
-2. Register and log in a user.
-3. Test adding an item with quantity higher than available stock; ensure the API responds with `400 Bad Request: Insufficient stock`.
-4. Test the checkout endpoint: verify that product stock in `products.json` decrements automatically upon successful checkout.
+npm install
 
----
+## 6. Environment Configuration
 
-## 📊 8. Grading Rubric (100 Marks)
+Create a .env file in the project root based on the provided .env.example file.
 
-| Evaluation Component | Marks |
-|---|:---:|
-| **File-System Async Data Persistence (`fs/promises`)** | 25 |
-| **Product Filtering, Search & Sorting Logic** | 20 |
-| **Shopping Cart Management & Stock Validation** | 25 |
-| **Session Authentication & Password Hashing** | 15 |
-| **Architecture, Error Handling & Code Quality** | 15 |
-| **Total Marks** | **100** |
+The environment configuration contains:
 
----
+PORT=3000
+SESSION_SECRET=change-this-to-a-long-random-secret
+ADMIN_KEY=admin123
+NODE_ENV=development
 
-## 📤 9. Submission Guidelines
+Do not commit the .env file to GitHub.
 
-- Submit your GitHub repository: `itm-assignment-07-ecommerce-api`.
-- Ensure the `data/` directory contains sample JSON data ready to test.
+## 7. Running the Application
+
+To start the server normally:
+
+npm start
+
+For development with Nodemon:
+
+npm run dev
+
+The server will run at:
+
+http://localhost:3000
+
+## 8. Health Check
+
+Endpoint:
+
+GET /api/health
+
+This endpoint can be used to verify that the server is running correctly.
+
+## 9. Authentication API
+
+### Register
+
+Endpoint:
+
+POST /api/auth/register
+
+Registers a new user.
+
+Request body:
+
+{
+  "name": "Pallavi",
+  "email": "pallavi@example.com",
+  "password": "password123"
+}
+
+### Login
+
+Endpoint:
+
+POST /api/auth/login
+
+Logs a user into the application and creates an authenticated session.
+
+Request body:
+
+{
+  "email": "pallavi@example.com",
+  "password": "password123"
+}
+
+### Logout
+
+Endpoint:
+
+POST /api/auth/logout
+
+Logs the authenticated user out and destroys the session.
+
+## 10. Product API
+
+### Get All Products
+
+Endpoint:
+
+GET /api/products
+
+Returns the complete product catalog.
+
+### Get Product by ID
+
+Endpoint:
+
+GET /api/products/:id
+
+Returns information about a specific product.
+
+Example:
+
+GET /api/products/prod_101
+
+### Product Filtering
+
+Products can be filtered using query parameters.
+
+Example:
+
+GET /api/products?category=Electronics&minPrice=1000&maxPrice=5000&sort=price_asc
+
+Supported filters include:
+
+- category
+- minPrice
+- maxPrice
+- inStock
+- search
+- sort
+
+### Search Products
+
+Example:
+
+GET /api/products?search=keyboard
+
+### Sort Products
+
+Products can be sorted using price sorting options.
+
+Example:
+
+GET /api/products?sort=price_asc
+
+Example:
+
+GET /api/products?sort=price_desc
+
+### Create Product
+
+Endpoint:
+
+POST /api/products
+
+Creating a product requires the admin key.
+
+Request header:
+
+x-admin-key: admin123
+
+### Update Product
+
+Endpoint:
+
+PUT /api/products/:id
+
+Updating a product requires the admin key.
+
+Request header:
+
+x-admin-key: admin123
+
+### Delete Product
+
+Endpoint:
+
+DELETE /api/products/:id
+
+Deleting a product requires the admin key.
+
+Request header:
+
+x-admin-key: admin123
+
+## 11. Shopping Cart API
+
+The shopping cart requires an authenticated user session.
+
+### View Cart
+
+Endpoint:
+
+GET /api/cart
+
+Returns the current user's shopping cart.
+
+### Add Item to Cart
+
+Endpoint:
+
+POST /api/cart/items
+
+Request body:
+
+{
+  "productId": "prod_101",
+  "quantity": 2
+}
+
+The API validates the requested quantity against the available stock.
+
+If the requested quantity is greater than the available stock, the API returns an appropriate error response.
+
+### Remove Item from Cart
+
+Endpoint:
+
+DELETE /api/cart/items/:productId
+
+Removes a product from the authenticated user's cart.
+
+### Checkout
+
+Endpoint:
+
+POST /api/cart/checkout
+
+Processes the current user's cart and updates product stock.
+
+After a successful checkout:
+
+- The order is processed
+- Product stock is decreased
+- The user's cart is cleared
+- The updated data is persisted in the JSON files
+
+## 12. Authentication and Security
+
+The application uses Express-Session for session-based authentication.
+
+Passwords are hashed using bcryptjs instead of storing plain-text passwords.
+
+Protected cart endpoints require an authenticated session.
+
+Administrative product operations use an admin key through the x-admin-key request header.
+
+## 13. Middleware
+
+The project includes several middleware components.
+
+### Logger Middleware
+
+Records incoming API requests for easier debugging and monitoring.
+
+### Authentication Guard
+
+Protects routes that require a logged-in user.
+
+### Product Validation Middleware
+
+Validates product data before creating or updating products.
+
+### Admin Guard
+
+Protects administrative product operations using the configured admin key.
+
+## 14. File-System Persistence
+
+The project uses Node.js fs/promises for asynchronous file operations.
+
+The file helper utility provides functionality for:
+
+- Reading JSON files
+- Parsing JSON data
+- Writing updated JSON data
+- Persisting changes asynchronously
+
+This allows products, users, and carts to remain available even after the server is restarted.
+
+## 15. Error Handling
+
+The API provides appropriate HTTP status codes and error messages for invalid requests.
+
+Examples include:
+
+- 400 Bad Request
+- 401 Unauthorized
+- 404 Not Found
+- 500 Internal Server Error
+
+The application also validates product availability and prevents users from adding quantities greater than the available stock.
+
+## 16. Testing
+
+The API was tested using Thunder Client.
+
+The following functionality was tested:
+
+- Server health check
+- Get all products
+- Product filtering
+- Product search
+- Product sorting
+- Get product by ID
+- User registration
+- User login
+- View cart
+- Add product to cart
+- Insufficient stock validation
+- Verify cart remains unchanged after a failed stock request
+- Remove cart item
+- Add cart item again
+- Check product stock
+- Checkout
+- Verify product stock decreases after checkout
+- Verify cart is empty after checkout
+- User logout
+- Verify protected routes return unauthorized after logout
+- Admin product creation
+- Admin product update
+- Admin product deletion
+
+## 17. Sample Stock Validation
+
+The API prevents users from adding more products than are available in stock.
+
+For example, if a product has 15 units available and the user requests 100 units, the API returns an error indicating insufficient stock.
+
+The cart is not modified when the requested quantity exceeds available stock.
+
+## 18. Checkout and Stock Update
+
+During checkout, the API validates the cart items and updates the corresponding product stock.
+
+For example:
+
+Initial stock:
+
+15
+
+Quantity purchased:
+
+2
+
+Stock after checkout:
+
+13
+
+The updated stock is persisted in data/products.json.
+
+The user's cart is cleared after a successful checkout.
+
+## 19. API Architecture
+
+The application follows a modular backend architecture.
+
+The project separates responsibilities into:
+
+- Controllers
+- Routes
+- Middleware
+- Utilities
+- Data storage
+
+This structure makes the application easier to maintain, test, and extend.
+
+## 20. Assignment Requirements Covered
+
+This project covers the major assignment requirements:
+
+- Asynchronous file-system persistence
+- JSON data storage
+- Product catalog
+- Product filtering
+- Product searching
+- Product sorting
+- Shopping cart functionality
+- Cart calculations
+- Stock validation
+- Checkout processing
+- Session-based authentication
+- Password hashing
+- Middleware
+- Error handling
+- Modular project architecture
+
+## 21. Author
+
+Pallavi Sarovar
+
+Assignment 07: E-Commerce Product & Shopping Cart API
+
+## 22. Conclusion
+
+This project demonstrates the development of a backend E-Commerce REST API using Node.js and Express.js.
+
+It implements product management, authentication, shopping cart operations, stock validation, checkout processing, session management, and persistent JSON-based storage while following a modular backend architecture.
