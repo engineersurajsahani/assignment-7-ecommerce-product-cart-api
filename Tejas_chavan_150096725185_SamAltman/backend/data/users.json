@@ -1,0 +1,16 @@
+[
+  {
+    "id": "usr_ac2b1c49",
+    "username": "tejas_shopper",
+    "email": "user_1788793714629@example.com",
+    "passwordHash": "$2a$10$Ldr29llSoH2/lPnVWLMm7OFWqRlMgjXkN8feGbloPpL3Y/SVrWpyy",
+    "createdAt": "2026-09-07T15:08:34.688Z"
+  },
+  {
+    "id": "usr_9333ac0b",
+    "username": "2025.tejasc@isu.ac.in",
+    "email": "2025.tejasc@isu.ac.in",
+    "passwordHash": "$2a$10$z2B9PNKVR/Zuy4f3VVgJV.oaJ.O8VwIddSnlDuF5dfseCFb1nBkGe",
+    "createdAt": "2026-09-07T15:12:38.791Z"
+  }
+]
