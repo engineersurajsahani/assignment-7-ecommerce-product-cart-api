@@ -1,0 +1,16 @@
+[
+  {
+    "userId": "usr_bc830575",
+    "items": [
+      {
+        "productId": "prod_101",
+        "name": "Wireless Noise-Canceling Headphones",
+        "unitPrice": 2999,
+        "quantity": 2,
+        "itemTotal": 5998
+      }
+    ],
+    "cartTotal": 5998,
+    "updatedAt": "2026-09-07T09:45:22.919Z"
+  }
+]
