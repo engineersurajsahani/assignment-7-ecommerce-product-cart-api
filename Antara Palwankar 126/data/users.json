@@ -1,0 +1,9 @@
+[
+  {
+    "id": "usr_001",
+    "username": "alex",
+    "email": "alex@shop.com",
+    "password": "$2a$10$oY75M7Z5hBwO1aJp6K.yve5Yd6x9M2f7J9t1O6Z2iE6.q9l1s7Z4m",
+    "createdAt": "2026-03-01T08:00:00.000Z"
+  }
+]
