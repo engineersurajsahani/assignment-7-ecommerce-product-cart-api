@@ -1,0 +1,47 @@
+[
+  {
+    "id": "prod_101",
+    "name": "Wireless Noise-Canceling Headphones",
+    "category": "Electronics",
+    "price": 2999,
+    "stock": 15,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "prod_102",
+    "name": "Mechanical Keyboard",
+    "category": "Electronics",
+    "price": 1899,
+    "stock": 25,
+    "rating": 4.5,
+    "createdAt": "2026-03-02T10:00:00.000Z"
+  },
+  {
+    "id": "prod_103",
+    "name": "Cotton Oversized T-Shirt",
+    "category": "Fashion",
+    "price": 799,
+    "stock": 40,
+    "rating": 4.2,
+    "createdAt": "2026-03-03T10:00:00.000Z"
+  },
+  {
+    "id": "prod_104",
+    "name": "Stainless Steel Water Bottle",
+    "category": "Home",
+    "price": 599,
+    "stock": 30,
+    "rating": 4.4,
+    "createdAt": "2026-03-04T10:00:00.000Z"
+  },
+  {
+    "id": "prod_105",
+    "name": "JavaScript Beginner Guide",
+    "category": "Books",
+    "price": 499,
+    "stock": 20,
+    "rating": 4.7,
+    "createdAt": "2026-03-05T10:00:00.000Z"
+  }
+]
