@@ -1,0 +1,56 @@
+[
+  {
+    "id": "prod_101",
+    "name": "Wireless Noise-Canceling Headphones",
+    "category": "Electronics",
+    "price": 2999,
+    "stock": 15,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "prod_102",
+    "name": "Mechanical RGB Gaming Keyboard",
+    "category": "Gaming",
+    "price": 3499,
+    "stock": 20,
+    "rating": 4.8,
+    "createdAt": "2026-03-02T11:15:00.000Z"
+  },
+  {
+    "id": "prod_103",
+    "name": "Ergonomic Office Chair with Lumbar Support",
+    "category": "Furniture",
+    "price": 8999,
+    "stock": 8,
+    "rating": 4.4,
+    "createdAt": "2026-03-03T09:30:00.000Z"
+  },
+  {
+    "id": "prod_104",
+    "name": "Smart Fitness Watch Series 5",
+    "category": "Wearables",
+    "price": 4599,
+    "stock": 25,
+    "rating": 4.7,
+    "createdAt": "2026-03-04T14:20:00.000Z"
+  },
+  {
+    "id": "prod_105",
+    "name": "Ultra-Wide 4K IPS Monitor 27-inch",
+    "category": "Electronics",
+    "price": 18499,
+    "stock": 5,
+    "rating": 4.9,
+    "createdAt": "2026-03-05T16:45:00.000Z"
+  },
+  {
+    "id": "prod_106",
+    "name": "Stainless Steel Thermal Travel Tumbler",
+    "category": "Home & Kitchen",
+    "price": 899,
+    "stock": 40,
+    "rating": 4.3,
+    "createdAt": "2026-03-06T08:00:00.000Z"
+  }
+]
