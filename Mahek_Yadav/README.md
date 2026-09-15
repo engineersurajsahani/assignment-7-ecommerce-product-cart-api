@@ -4,11 +4,6 @@ A lightweight RESTful E-Commerce backend API built using Node.js and Express.js.
 
 The project uses JSON files with Node.js `fs/promises` for asynchronous data persistence instead of a traditional database.
 
-## 🚀 Live API
-
-**Render Deployment:**
-https://itm-assignment-07-ecommerce-api.onrender.com
-
 
 ---
 
