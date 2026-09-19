@@ -1,190 +1,255 @@
-# 🛒 Assignment 07: E-Commerce Product & Shopping Cart API
-> **Track:** Backend Development | **Level:** Beginner to Intermediate | **Estimated Time:** 5–7 Hours  
-> **Tech Stack:** Node.js, Express.js, JSON / File-System Data Storage (`fs/promises`), bcryptjs, Express-Session
+# 🛒 E-Commerce Product & Shopping Cart API (Assignment 7)
+
+🚀 **Live Deployment Links:**
+- **Render:** [https://samarth-assignment-7-ecommerce-product-cart-api.onrender.com](https://samarth-assignment-7-ecommerce-product-cart-api.onrender.com)
+- **Vercel:** [https://samarth-assignment-7-ecommerce-prod.vercel.app](https://samarth-assignment-7-ecommerce-prod.vercel.app)
 
 ---
 
-## 📌 1. Objective & Overview
-
-Build a lightweight, production-structured **E-Commerce Product Catalog & Shopping Cart REST API** using **Node.js** and **Express.js**, persisting data directly in structured JSON files via Node's asynchronous file system module (`fs/promises`). This assignment reinforces core backend fundamentals: multi-criteria filtering, cart calculations (totals, discounts, stock validation), user session management, and custom middleware design without relying on a full database engine.
-
-### Key Learning Outcomes:
-- Asynchronous file I/O operations using Node's `fs/promises` (`readFile`, `writeFile`).
-- Building dynamic search and filtering engines (Category, Price Range, In-Stock, Sorting).
-- Managing stateful shopping cart sessions tied to authenticated users.
-- Implementing inventory reservation checks before items are added to a cart.
-- Designing reusable validation and logging middleware.
+- **Name:** Samarth Navale
+- **Roll No:** 150096725148
+- **Cohort:** Sam Altman
 
 ---
 
-## 🛠️ 2. Tech Stack & Dependencies
+A production-ready, lightweight RESTful API for an **E-Commerce Product Catalog & Shopping Cart System** built with **Node.js**, **Express.js**, **Session Authentication**, and **Asynchronous JSON File-System Persistence (`fs/promises`)**.
 
+Includes Multi-criteria Search & Filtering, Stateful User Cart Management, Real-time Stock Availability Validation, Order Checkout with Auto-Inventory Decrement, OpenAPI 3.0 (Swagger UI) Documentation, Request Logging, and Error Handling.
+
+---
+
+## 🚀 Features
+
+- 🔐 **Session Authentication & Password Security**: Secure customer registration and login with `bcryptjs` password hashing and stateful session management via `express-session`.
+- 📦 **Dynamic Product Catalog**:
+  - Multi-criteria filtering by **Category**, **Price Range (`minPrice`, `maxPrice`)**, and **In-Stock** status.
+  - Case-insensitive keyword search on product title and category.
+  - Multi-field sorting (`price_asc`, `price_desc`, `rating_desc`, `name_asc`, `newest`).
+  - Full CRUD capabilities for store administrators with payload validation.
+- 🛍️ **Stateful Shopping Cart & Inventory Validation**:
+  - Persistent shopping cart linked to authenticated users.
+  - Strict inventory checks preventing users from adding out-of-stock items or exceeding available quantities.
+  - Automated item totals (`quantity * unitPrice`) and grand cart total calculations.
+  - Remove specific items or clear cart.
+- 💳 **Order Checkout & Automatic Stock Deduction**:
+  - Validates cart contents against live store inventory.
+  - Decrements product inventory stock counts in `products.json` upon order placement.
+  - Generates an order confirmation receipt with timestamp and order ID.
+- 🗄️ **Asynchronous JSON File Storage**: High-performance asynchronous file I/O operations using Node's native `fs/promises` (`readFile`, `writeFile`).
+- 📊 **Interactive Swagger Documentation**: OpenAPI 3.0 specification available at `/api-docs`.
+- 📮 **Postman Collection Included**: Ready-to-import Postman collection with test cases and preconfigured requests.
+- 📝 **Logging & Global Error Handling**: Custom timestamped request logger and clean JSON error responses.
+
+---
+
+## 📁 Project Folder Structure
+
+```text
+📂 Assignment7/
+├── 📄 render.yaml                                    # Root Render Deployment Config
+├── 📄 vercel.json                                    # Root Vercel Serverless Config
+├── 📄 Assignment 7.txt                               # Original Assignment Specification
+├── 📄 README.md                                      # Main Project Documentation
+└── 📂 Samarth_Navale_150096725148/                   # Student Project Directory
+    ├── 📄 server.js                                  # Express Server Entry Point
+    ├── 📄 package.json                               # Project Dependencies & Scripts
+    ├── 📄 .env                                       # Environment Variables
+    ├── 📄 .env.example                               # Environment Template
+    ├── 📄 .gitignore                                 # Git Ignore Rules
+    ├── 📄 render.yaml                                # Project-level Render Config
+    ├── 📄 vercel.json                                # Project-level Vercel Config
+    ├── 📄 README.md                                  # Internal Project Documentation
+    ├── 📂 data/                                      # JSON Persistence Storage
+    │   ├── 📄 products.json                          # Seeded Products Catalog
+    │   ├── 📄 users.json                             # Seeded User Store
+    │   └── 📄 carts.json                             # Seeded User Carts
+    ├── 📂 src/
+    │   ├── 📂 config/
+    │   │   └── 📄 swagger.js                         # Swagger UI Setup
+    │   ├── 📂 utils/
+    │   │   └── 📄 fileHelper.js                      # fs/promises readData & writeData
+    │   ├── 📂 middleware/
+    │   │   ├── 📄 authGuard.js                       # Session & Auth Header Guard
+    │   │   ├── 📄 logger.js                          # Custom Request Logger
+    │   │   ├── 📄 validateProduct.js                 # Product Input Validation
+    │   │   └── 📄 errorHandler.js                    # Global Error Handler
+    │   ├── 📂 controllers/
+    │   │   ├── 📄 authController.js                  # Register, Login, Logout, Profile
+    │   │   ├── 📄 productController.js               # Search, Filter, Sort & CRUD
+    │   │   └── 📄 cartController.js                  # View Cart, Add/Remove Items, Checkout
+    │   └── 📂 routes/
+    │       ├── 📄 authRoutes.js                      # /api/auth Endpoints
+    │       ├── 📄 productRoutes.js                   # /api/products Endpoints
+    │       └── 📄 cartRoutes.js                      # /api/cart Endpoints
+    └── 📂 docs/
+        ├── 📄 swagger.yaml                           # OpenAPI 3.0 Specification
+        └── 📄 Ecommerce_Product_Cart_API.postman_collection.json # Postman Collection
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1. Prerequisites
+- **Node.js** (v16+ recommended)
+- **npm** or **yarn**
+
+### 2. Navigate to Project & Install Dependencies
 ```bash
-# Initialize Node.js project
-npm init -y
-
-# Install runtime dependencies
-npm install express bcryptjs express-session dotenv uuid
-
-# Install development dependencies
-npm install -D nodemon
+cd Samarth_Navale_150096725148
+npm install
 ```
+
+### 3. Configure Environment Variables
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+
+Set your configuration values inside `.env`:
+```env
+PORT=5000
+NODE_ENV=development
+SESSION_SECRET=super_secret_session_key_ecommerce_2026_samarth_navale
+```
+
+### 4. Run Locally
+```bash
+# Start in production mode
+npm start
+
+# Or start in development mode with nodemon
+npm run dev
+```
+
+The API will start at: `http://localhost:5000`  
+Swagger Documentation UI: `http://localhost:5000/api-docs`
 
 ---
 
-## 🗄️ 3. JSON Data Schemas & Entities
+## 📋 API Endpoints Reference
 
-Data will be persisted in `./data/products.json`, `./data/users.json`, and `./data/carts.json`.
-
-### 📦 Product Entity (`data/products.json`)
-```json
-[
-  {
-    "id": "prod_101",
-    "name": "Wireless Noise-Canceling Headphones",
-    "category": "Electronics",
-    "price": 2999,
-    "stock": 15,
-    "rating": 4.6,
-    "createdAt": "2026-03-01T10:00:00.000Z"
-  }
-]
-```
-
-### 🛍️ Cart Entity (`data/carts.json`)
-```json
-[
-  {
-    "userId": "usr_001",
-    "items": [
-      {
-        "productId": "prod_101",
-        "name": "Wireless Noise-Canceling Headphones",
-        "unitPrice": 2999,
-        "quantity": 2,
-        "itemTotal": 5998
-      }
-    ],
-    "cartTotal": 5998,
-    "updatedAt": "2026-03-01T11:30:00.000Z"
-  }
-]
-```
-
----
-
-## 📋 4. API Endpoints Specification
-
-### 🔐 User Authentication
+### 🔐 1. Authentication Endpoints (`/api/auth`)
 
 | Method | Endpoint | Description | Request Body Example | Status Codes |
 |---|---|---|---|---|
-| `POST` | `/api/auth/register` | Register customer with hashed password | `{"username":"alex","email":"alex@shop.com","password":"password123"}` | `201 Created`<br>`400 Bad Request` |
-| `POST` | `/api/auth/login` | Authenticate customer and create session | `{"email":"alex@shop.com","password":"password123"}` | `200 OK`<br>`401 Unauthorized` |
-| `POST` | `/api/auth/logout` | Terminate session | None | `200 OK` |
+| `POST` | `/api/auth/register` | Register new customer with bcrypt hash | `{"username":"alex","email":"alex@shop.com","password":"password123"}` | `201 Created`<br>`400 Bad Request` |
+| `POST` | `/api/auth/login` | Authenticate customer & create session | `{"email":"alex@shop.com","password":"password123"}` | `200 OK`<br>`401 Unauthorized` |
+| `POST` | `/api/auth/logout` | Terminate session & clear cookies | None | `200 OK` |
+| `GET` | `/api/auth/me` | Fetch currently logged in user profile | None | `200 OK`<br>`401 Unauthorized` |
 
-### 📦 Product Catalog Management
+---
+
+### 📦 2. Product Catalog Endpoints (`/api/products`)
 
 | Method | Endpoint | Query Parameters | Description | Request Body Example | Status Codes |
 |---|---|---|---|---|---|
-| `GET` | `/api/products` | `?category=Electronics&minPrice=1000&maxPrice=5000&sort=price_asc` | Filter & search products | None | `200 OK` |
+| `GET` | `/api/products` | `?category=Electronics&minPrice=1000&maxPrice=5000&sort=price_asc` | Filter, search & sort products | None | `200 OK` |
 | `GET` | `/api/products/:id` | None | Fetch single product by ID | None | `200 OK`<br>`404 Not Found` |
-| `POST` | `/api/products` | None | Add a new product (Admin route) | `{"name":"Mechanical Keyboard","category":"Electronics","price":1899,"stock":25,"rating":4.5}` | `201 Created`<br>`400 Bad Request` |
-| `PUT` | `/api/products/:id` | None | Update price or stock count | `{"stock":30,"price":1799}` | `200 OK`<br>`404 Not Found` |
+| `POST` | `/api/products` | None | Add a new product to catalog | `{"name":"Mechanical Keyboard","category":"Electronics","price":1899,"stock":25,"rating":4.5}` | `201 Created`<br>`400 Bad Request` |
+| `PUT` | `/api/products/:id` | None | Update price, stock, or info | `{"price":1799,"stock":30}` | `200 OK`<br>`404 Not Found` |
 | `DELETE` | `/api/products/:id` | None | Remove product from store | None | `200 OK`<br>`404 Not Found` |
 
-### 🛒 Shopping Cart System (Authenticated)
+#### Supported Filter & Sort Query Parameters:
+- `category` — Case-insensitive filter (e.g., `?category=Electronics`)
+- `minPrice` & `maxPrice` — Numeric range filtering (e.g., `?minPrice=500&maxPrice=3000`)
+- `inStock` — `?inStock=true` (stock > 0) or `?inStock=false`
+- `search` — Keyword matching on title or category (e.g., `?search=keyboard`)
+- `sort` — `price_asc`, `price_desc`, `rating_desc`, `name_asc`, `name_desc`, `newest`
+
+---
+
+### 🛒 3. Shopping Cart Endpoints (`/api/cart` - Authenticated)
 
 | Method | Endpoint | Description | Request Body Example | Status Codes |
 |---|---|---|---|---|
-| `GET` | `/api/cart` | View current user's cart with calculated total | None | `200 OK` |
-| `POST` | `/api/cart/items` | Add product to cart (Validates stock availability) | `{"productId":"prod_101","quantity":1}` | `200 OK`<br>`400 Out of Stock` |
+| `GET` | `/api/cart` | View current user's cart with calculated total | None | `200 OK`<br>`401 Unauthorized` |
+| `POST` | `/api/cart/items` | Add product to cart (Validates stock availability) | `{"productId":"prod_101","quantity":2}` | `200 OK`<br>`400 Insufficient Stock`<br>`404 Product Not Found` |
 | `DELETE` | `/api/cart/items/:productId` | Remove specific product from cart | None | `200 OK`<br>`404 Not in Cart` |
-| `POST` | `/api/cart/checkout` | Simulate order placement & decrement product stock | None | `200 OK`<br>`400 Empty Cart` |
+| `POST` | `/api/cart/checkout` | Checkout order, decrement product stock & clear cart | None | `200 OK`<br>`400 Empty Cart / Stock Changed` |
 
 ---
 
-## 🏗️ 5. Project Folder Architecture
+## 🧪 Testing & Verification Guide
 
-```text
-assignment-07-ecommerce-api/
-├── data/
-│   ├── carts.json
-│   ├── products.json
-│   └── users.json
-├── controllers/
-│   ├── authController.js
-│   ├── cartController.js
-│   └── productController.js
-├── middleware/
-│   ├── authGuard.js         # Check req.session.user exists
-│   ├── logger.js            # Request logger
-│   └── validateProduct.js   # Verify price > 0, stock >= 0
-├── routes/
-│   ├── authRoutes.js
-│   ├── cartRoutes.js
-│   └── productRoutes.js
-├── utils/
-│   └── fileHelper.js        # readJSONFile, writeJSONFile wrappers
-├── .env.example
-├── .gitignore
-├── package.json
-├── server.js
-└── README.md
+### 1. Register & Login
+```bash
+# Register
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alex","email":"alex@shop.com","password":"password123"}'
+
+# Login (stores cookie in session.txt)
+curl -X POST http://localhost:5000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -c session.txt \
+  -d '{"email":"alex@shop.com","password":"password123"}'
+```
+
+### 2. Search & Filter Products
+```bash
+# Filter Electronics between 1000 and 5000 sorted by price
+curl "http://localhost:5000/api/products?category=Electronics&minPrice=1000&maxPrice=5000&sort=price_asc"
+
+# Search keyword
+curl "http://localhost:5000/api/products?search=keyboard"
+```
+
+### 3. Shopping Cart & Stock Validation
+```bash
+# View Cart
+curl -b session.txt http://localhost:5000/api/cart
+
+# Add Item to Cart
+curl -X POST http://localhost:5000/api/cart/items \
+  -b session.txt \
+  -H "Content-Type: application/json" \
+  -d '{"productId":"prod_101","quantity":2}'
+
+# Test Insufficient Stock Rejection (400 Bad Request)
+curl -X POST http://localhost:5000/api/cart/items \
+  -b session.txt \
+  -H "Content-Type: application/json" \
+  -d '{"productId":"prod_101","quantity":9999}'
+```
+
+### 4. Checkout Order
+```bash
+# Checkout order (automatically decrements stock in products.json)
+curl -X POST http://localhost:5000/api/cart/checkout -b session.txt
 ```
 
 ---
 
-## ⚙️ 6. Core Implementation Guide: Asynchronous File Helper
+## 🌐 Deployment Configuration
 
-```javascript
-// utils/fileHelper.js
-const fs = require('fs/promises');
-const path = require('path');
-
-const readData = async (filename) => {
-  const filePath = path.join(__dirname, '../data', filename);
-  try {
-    const data = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    return [];
-  }
-};
-
-const writeData = async (filename, data) => {
-  const filePath = path.join(__dirname, '../data', filename);
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
-};
-
-module.exports = { readData, writeData };
+### Render Setup (`render.yaml`)
+Configured to automatically install dependencies and start the Express server:
+```yaml
+services:
+  - type: web
+    name: samarth-assignment-7-ecommerce-product-cart-api
+    env: node
+    buildCommand: cd Samarth_Navale_150096725148 && npm install
+    startCommand: cd Samarth_Navale_150096725148 && npm start
 ```
 
----
-
-## 🧪 7. Testing & Verification
-
-1. Seed `data/products.json` with 5 products across different categories.
-2. Register and log in a user.
-3. Test adding an item with quantity higher than available stock; ensure the API responds with `400 Bad Request: Insufficient stock`.
-4. Test the checkout endpoint: verify that product stock in `products.json` decrements automatically upon successful checkout.
-
----
-
-## 📊 8. Grading Rubric (100 Marks)
-
-| Evaluation Component | Marks |
-|---|:---:|
-| **File-System Async Data Persistence (`fs/promises`)** | 25 |
-| **Product Filtering, Search & Sorting Logic** | 20 |
-| **Shopping Cart Management & Stock Validation** | 25 |
-| **Session Authentication & Password Hashing** | 15 |
-| **Architecture, Error Handling & Code Quality** | 15 |
-| **Total Marks** | **100** |
-
----
-
-## 📤 9. Submission Guidelines
-
-- Submit your GitHub repository: `itm-assignment-07-ecommerce-api`.
-- Ensure the `data/` directory contains sample JSON data ready to test.
+### Vercel Setup (`vercel.json`)
+Configured with serverless function routing:
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Samarth_Navale_150096725148/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "Samarth_Navale_150096725148/server.js"
+    }
+  ]
+}
+```

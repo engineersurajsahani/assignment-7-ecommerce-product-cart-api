@@ -1,0 +1,655 @@
+openapi: 3.0.3
+info:
+  title: E-Commerce Product Catalog & Shopping Cart REST API
+  description: |
+    A production-ready E-Commerce Product Catalog & Shopping Cart REST API built with Node.js, Express.js, and asynchronous JSON file persistence (`fs/promises`).
+    
+    ### Author Details:
+    - **Name:** Samarth Navale
+    - **Roll No:** 150096725148
+    - **Cohort:** Sam Altman
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Local Development Server
+  - url: https://samarth-assignment-7-ecommerce-product-cart-api.vercel.app
+    description: Vercel Production Deployment
+  - url: https://samarth-assignment-7-ecommerce-product-cart-api.onrender.com
+    description: Render Production Deployment
+
+tags:
+  - name: Authentication
+    description: User registration, login session creation, logout, and profile
+  - name: Products
+    description: Product catalog management, filtering, searching, sorting, and CRUD
+  - name: Shopping Cart
+    description: Stateful cart operations, stock reservation validation, and order checkout
+
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new customer
+      description: Creates a new user account with bcrypt-hashed password and persists to users.json.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - email
+                - password
+              properties:
+                username:
+                  type: string
+                  example: alex
+                email:
+                  type: string
+                  format: email
+                  example: alex@shop.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 6
+                  example: password123
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '400':
+          description: Validation error or email already registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Authenticate user and create session
+      description: Validates email and password, creates an authenticated session cookie, and returns user info.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: alex@shop.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Terminate session
+      description: Destroys user session and clears authentication cookie.
+      responses:
+        '200':
+          description: Logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Logged out successfully
+
+  /api/auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current authenticated user profile
+      description: Retrieves profile of current active session.
+      responses:
+        '200':
+          description: User profile
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/products:
+    get:
+      tags:
+        - Products
+      summary: Filter, search, and sort products
+      description: Returns product catalog filtered by category, price bounds, stock status, search keyword, and sorted.
+      parameters:
+        - name: category
+          in: query
+          description: Filter by category (e.g., Electronics, Clothing, Home & Kitchen, Fitness)
+          schema:
+            type: string
+            example: Electronics
+        - name: minPrice
+          in: query
+          description: Minimum price filter
+          schema:
+            type: number
+            example: 1000
+        - name: maxPrice
+          in: query
+          description: Maximum price filter
+          schema:
+            type: number
+            example: 5000
+        - name: inStock
+          in: query
+          description: Filter only items in stock (true/false)
+          schema:
+            type: boolean
+            example: true
+        - name: search
+          in: query
+          description: Keyword search on name or category
+          schema:
+            type: string
+            example: keyboard
+        - name: sort
+          in: query
+          description: Sorting field and direction
+          schema:
+            type: string
+            enum: [price_asc, price_desc, rating_desc, name_asc, name_desc, newest]
+            example: price_asc
+      responses:
+        '200':
+          description: List of filtered products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  count:
+                    type: integer
+                    example: 3
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+
+    post:
+      tags:
+        - Products
+      summary: Add a new product
+      description: Adds a new product to the catalog (persisted in products.json).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - category
+                - price
+                - stock
+              properties:
+                name:
+                  type: string
+                  example: Mechanical Keyboard
+                category:
+                  type: string
+                  example: Electronics
+                price:
+                  type: number
+                  example: 1899
+                stock:
+                  type: integer
+                  example: 25
+                rating:
+                  type: number
+                  example: 4.5
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product created successfully
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Fetch single product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: prod_101
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Products
+      summary: Update product details, price, or stock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: prod_101
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Wireless Noise-Canceling Headphones Pro
+                category:
+                  type: string
+                  example: Electronics
+                price:
+                  type: number
+                  example: 2799
+                stock:
+                  type: integer
+                  example: 30
+                rating:
+                  type: number
+                  example: 4.7
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product updated successfully
+                  data:
+                    $ref: '#/components/schemas/Product'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Products
+      summary: Remove product from store catalog
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: prod_101
+      responses:
+        '200':
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product deleted successfully
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/cart:
+    get:
+      tags:
+        - Shopping Cart
+      summary: View current user's shopping cart
+      description: Returns all items in the user's cart with unit prices, item totals, and grand total.
+      responses:
+        '200':
+          description: Shopping cart contents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Cart'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/cart/items:
+    post:
+      tags:
+        - Shopping Cart
+      summary: Add product to cart with stock validation
+      description: Verifies inventory stock availability before adding. If quantity > stock, rejects with 400.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+              properties:
+                productId:
+                  type: string
+                  example: prod_101
+                quantity:
+                  type: integer
+                  minimum: 1
+                  default: 1
+                  example: 2
+      responses:
+        '200':
+          description: Item added to cart successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Item added to cart successfully
+                  data:
+                    $ref: '#/components/schemas/Cart'
+        '400':
+          description: Insufficient stock or invalid quantity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Product not found
+
+  /api/cart/items/{productId}:
+    delete:
+      tags:
+        - Shopping Cart
+      summary: Remove specific product from cart
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+            example: prod_101
+      responses:
+        '200':
+          description: Item removed from cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Item removed from cart successfully
+                  data:
+                    $ref: '#/components/schemas/Cart'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Item not found in cart
+
+  /api/cart/checkout:
+    post:
+      tags:
+        - Shopping Cart
+      summary: Checkout shopping cart
+      description: Validates inventory, automatically decrements product stock from products.json, empties cart, and generates order receipt.
+      responses:
+        '200':
+          description: Order placed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Order placed successfully! Checkout complete.
+                  order:
+                    type: object
+                    properties:
+                      orderId:
+                        type: string
+                        example: ord_a1b2c3d4
+                      userId:
+                        type: string
+                        example: usr_001
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CartItem'
+                      totalAmount:
+                        type: number
+                        example: 5998
+                      itemCount:
+                        type: integer
+                        example: 2
+                      placedAt:
+                        type: string
+                        format: date-time
+                      status:
+                        type: string
+                        example: Confirmed
+        '400':
+          description: Empty cart or stock unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: prod_101
+        name:
+          type: string
+          example: Wireless Noise-Canceling Headphones
+        category:
+          type: string
+          example: Electronics
+        price:
+          type: number
+          example: 2999
+        stock:
+          type: integer
+          example: 15
+        rating:
+          type: number
+          example: 4.6
+        createdAt:
+          type: string
+          format: date-time
+          example: '2026-03-01T10:00:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: prod_101
+        name:
+          type: string
+          example: Wireless Noise-Canceling Headphones
+        unitPrice:
+          type: number
+          example: 2999
+        quantity:
+          type: integer
+          example: 2
+        itemTotal:
+          type: number
+          example: 5998
+
+    Cart:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: usr_001
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        cartTotal:
+          type: number
+          example: 5998
+        updatedAt:
+          type: string
+          format: date-time
+
+    AuthSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Action successful
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              example: usr_001
+            username:
+              type: string
+              example: alex
+            email:
+              type: string
+              example: alex@shop.com
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Error description message
+        errors:
+          type: array
+          items:
+            type: string
