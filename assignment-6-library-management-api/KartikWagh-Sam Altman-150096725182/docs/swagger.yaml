@@ -1,0 +1,433 @@
+paths:
+
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  example: Student One
+                email:
+                  type: string
+                  example: student@gmail.com
+                password:
+                  type: string
+                  example: student123
+                role:
+                  type: string
+                  enum:
+                    - student
+                    - librarian
+                  example: student
+      responses:
+        "201":
+          description: User registered successfully
+        "400":
+          description: Validation error
+        "409":
+          description: Email already registered
+
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: student@gmail.com
+                password:
+                  type: string
+                  example: student123
+      responses:
+        "200":
+          description: Login successful
+        "401":
+          description: Invalid credentials
+
+
+  /api/auth/profile:
+    get:
+      tags:
+        - Authentication
+      summary: Get logged-in user profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Profile returned successfully
+        "401":
+          description: Unauthorized
+
+    put:
+      tags:
+        - Authentication
+      summary: Update logged-in user profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Updated Name
+                email:
+                  type: string
+                  example: updated@gmail.com
+      responses:
+        "200":
+          description: Profile updated successfully
+        "401":
+          description: Unauthorized
+
+
+  /api/books:
+    get:
+      tags:
+        - Books
+      summary: Get all books
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - available
+              - borrowed
+        - name: author
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Books returned successfully
+
+    post:
+      tags:
+        - Books
+      summary: Add a book
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - author
+                - isbn
+                - category
+                - quantity
+              properties:
+                title:
+                  type: string
+                  example: Atomic Habits
+                author:
+                  type: string
+                  example: James Clear
+                isbn:
+                  type: string
+                  example: 9780735211292
+                category:
+                  type: string
+                  example: Self Help
+                quantity:
+                  type: integer
+                  example: 5
+      responses:
+        "201":
+          description: Book added successfully
+        "403":
+          description: Librarian access required
+
+
+  /api/books/search:
+    get:
+      tags:
+        - Books
+      summary: Search books
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: title
+          in: query
+          schema:
+            type: string
+        - name: author
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Search results
+
+
+  /api/books/{id}:
+    get:
+      tags:
+        - Books
+      summary: Get a book
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Book found
+        "404":
+          description: Book not found
+
+    put:
+      tags:
+        - Books
+      summary: Update a book
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - author
+                - isbn
+                - category
+                - quantity
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                isbn:
+                  type: string
+                category:
+                  type: string
+                quantity:
+                  type: integer
+      responses:
+        "200":
+          description: Book updated successfully
+        "403":
+          description: Librarian access required
+
+    delete:
+      tags:
+        - Books
+      summary: Delete a book
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Book deleted successfully
+        "403":
+          description: Librarian access required
+
+
+  /api/books/{id}/borrow:
+    post:
+      tags:
+        - Borrow and Return
+      summary: Borrow a book
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Book borrowed successfully
+        "400":
+          description: Book unavailable
+        "403":
+          description: Student access required
+
+
+  /api/books/{id}/return:
+    post:
+      tags:
+        - Borrow and Return
+      summary: Return a book
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Book returned successfully
+        "400":
+          description: No active borrowing transaction
+        "403":
+          description: Student access required
+
+
+  /api/transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Get all transactions
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All transactions
+        "403":
+          description: Librarian access required
+
+
+  /api/transactions/my:
+    get:
+      tags:
+        - Transactions
+      summary: Get logged-in user's transactions
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User transaction history
+
+
+  /api/users:
+    get:
+      tags:
+        - Users
+      summary: Get all users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All users
+        "403":
+          description: Librarian access required
+
+
+  /api/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User details
+        "404":
+          description: User not found
+
+
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User deleted successfully
+        "403":
+          description: Librarian access required
+
+
+  /api/users/{id}/role:
+    put:
+      tags:
+        - Users
+      summary: Update user role
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - role
+              properties:
+                role:
+                  type: string
+                  enum:
+                    - student
+                    - librarian
+                  example: librarian
+      responses:
+        "200":
+          description: Role updated successfully
+        "403":
+          description: Librarian access required
