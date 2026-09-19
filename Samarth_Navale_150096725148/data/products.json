@@ -1,0 +1,74 @@
+[
+  {
+    "id": "prod_101",
+    "name": "Wireless Noise-Canceling Headphones",
+    "category": "Electronics",
+    "price": 2999,
+    "stock": 15,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "prod_102",
+    "name": "Ergonomic Mechanical Keyboard",
+    "category": "Electronics",
+    "price": 4499,
+    "stock": 20,
+    "rating": 4.8,
+    "createdAt": "2026-03-01T10:15:00.000Z"
+  },
+  {
+    "id": "prod_103",
+    "name": "4K Ultra HD Gaming Monitor",
+    "category": "Electronics",
+    "price": 18999,
+    "stock": 8,
+    "rating": 4.7,
+    "createdAt": "2026-03-01T10:30:00.000Z"
+  },
+  {
+    "id": "prod_104",
+    "name": "Cotton Casual Oversized Hoodie",
+    "category": "Clothing",
+    "price": 1299,
+    "stock": 45,
+    "rating": 4.3,
+    "createdAt": "2026-03-01T11:00:00.000Z"
+  },
+  {
+    "id": "prod_105",
+    "name": "Slim Fit Denim Jeans",
+    "category": "Clothing",
+    "price": 1999,
+    "stock": 30,
+    "rating": 4.4,
+    "createdAt": "2026-03-01T11:15:00.000Z"
+  },
+  {
+    "id": "prod_106",
+    "name": "Stainless Steel Thermal Water Bottle",
+    "category": "Home & Kitchen",
+    "price": 799,
+    "stock": 50,
+    "rating": 4.5,
+    "createdAt": "2026-03-01T11:30:00.000Z"
+  },
+  {
+    "id": "prod_107",
+    "name": "Automatic Espresso Coffee Machine",
+    "category": "Home & Kitchen",
+    "price": 12499,
+    "stock": 5,
+    "rating": 4.9,
+    "createdAt": "2026-03-01T12:00:00.000Z"
+  },
+  {
+    "id": "prod_108",
+    "name": "Adjustable Dumbbells Set (20kg)",
+    "category": "Fitness",
+    "price": 3499,
+    "stock": 12,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T12:30:00.000Z"
+  }
+]
