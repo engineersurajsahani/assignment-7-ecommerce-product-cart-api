@@ -1,0 +1,74 @@
+[
+  {
+    "id": "prod_101",
+    "name": "Wireless Noise-Canceling Headphones",
+    "category": "Electronics",
+    "price": 2999,
+    "stock": 15,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "prod_102",
+    "name": "Mechanical Keyboard (RGB)",
+    "category": "Electronics",
+    "price": 1899,
+    "stock": 25,
+    "rating": 4.4,
+    "createdAt": "2026-03-02T10:00:00.000Z"
+  },
+  {
+    "id": "prod_103",
+    "name": "Cotton Crew-Neck T-Shirt",
+    "category": "Clothing",
+    "price": 499,
+    "stock": 40,
+    "rating": 4.2,
+    "createdAt": "2026-03-03T10:00:00.000Z"
+  },
+  {
+    "id": "prod_104",
+    "name": "Slim-Fit Denim Jeans",
+    "category": "Clothing",
+    "price": 1299,
+    "stock": 20,
+    "rating": 4.3,
+    "createdAt": "2026-03-04T10:00:00.000Z"
+  },
+  {
+    "id": "prod_105",
+    "name": "The Pragmatic Programmer",
+    "category": "Books",
+    "price": 899,
+    "stock": 12,
+    "rating": 4.8,
+    "createdAt": "2026-03-05T10:00:00.000Z"
+  },
+  {
+    "id": "prod_106",
+    "name": "Stainless Steel Water Bottle (1L)",
+    "category": "Home",
+    "price": 649,
+    "stock": 30,
+    "rating": 4.5,
+    "createdAt": "2026-03-06T10:00:00.000Z"
+  },
+  {
+    "id": "prod_107",
+    "name": "Leather RFID-Blocking Wallet",
+    "category": "Accessories",
+    "price": 799,
+    "stock": 18,
+    "rating": 4.1,
+    "createdAt": "2026-03-07T10:00:00.000Z"
+  },
+  {
+    "id": "prod_108",
+    "name": "Smart LED Desk Lamp",
+    "category": "Home",
+    "price": 1499,
+    "stock": 0,
+    "rating": 4.7,
+    "createdAt": "2026-03-08T10:00:00.000Z"
+  }
+]
