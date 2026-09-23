@@ -6,6 +6,10 @@ The project uses JSON files with Node.js `fs/promises` for asynchronous data per
 
 
 ---
+## 🚀 Live API
+
+**Render Deployment:**
+https://itm-assignment-07-ecommerce-api.onrender.com
 
 ## 📌 Project Overview
 
