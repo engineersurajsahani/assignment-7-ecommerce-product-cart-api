@@ -1,0 +1,23 @@
+{
+  "name": "itm-assignment-07-ecommerce-api",
+  "version": "1.0.0",
+  "description": "Lightweight E-Commerce Product Catalog and Shopping Cart REST API using Node.js, Express.js, JSON files, sessions and bcryptjs.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["nodejs", "express", "ecommerce", "rest-api", "fs-promises", "session"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
