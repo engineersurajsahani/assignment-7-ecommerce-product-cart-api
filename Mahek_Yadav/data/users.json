@@ -1,0 +1,10 @@
+[
+  {
+    "id": "usr_a42f00f6",
+    "username": "alex",
+    "email": "alex@shop.com",
+    "password": "$2b$10$unBCK41qAucQXfSgrLzGsONRLHQ5ABDm9lFOqx5N1GfX/qawbyJk.",
+    "role": "customer",
+    "createdAt": "2026-09-07T06:16:23.460Z"
+  }
+]

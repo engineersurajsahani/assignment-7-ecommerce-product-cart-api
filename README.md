@@ -3,6 +3,11 @@
 > **Tech Stack:** Node.js, Express.js, JSON / File-System Data Storage (`fs/promises`), bcryptjs, Express-Session
 
 ---
+## 🚀 Live API
+
+**Render Deployment:**
+https://itm-assignment-07-ecommerce-api.onrender.com
+
 
 ## 📌 1. Objective & Overview
 
