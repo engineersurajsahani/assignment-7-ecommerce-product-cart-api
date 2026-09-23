@@ -2,6 +2,10 @@
 
 A lightweight REST API built with Node.js and Express.js. Product, user, and cart data are persisted in JSON files using `fs/promises` instead of a database.
 
+## Live Deployment
+
+**Render:** https://pari-gothi-assignment-7-ecommerce.onrender.com
+
 ## Tech Stack
 
 - Node.js
