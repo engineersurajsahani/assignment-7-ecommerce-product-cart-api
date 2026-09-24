@@ -1,0 +1,47 @@
+[
+  {
+    "id": "prod_101",
+    "name": "Wireless Noise-Canceling Headphones",
+    "category": "Electronics",
+    "price": 2999,
+    "stock": 15,
+    "rating": 4.6,
+    "createdAt": "2026-03-01T10:00:00.000Z"
+  },
+  {
+    "id": "prod_102",
+    "name": "Mechanical Keyboard",
+    "category": "Electronics",
+    "price": 1899,
+    "stock": 25,
+    "rating": 4.5,
+    "createdAt": "2026-03-02T10:00:00.000Z"
+  },
+  {
+    "id": "prod_103",
+    "name": "Ergonomic Office Chair",
+    "category": "Furniture",
+    "price": 4500,
+    "stock": 5,
+    "rating": 4.8,
+    "createdAt": "2026-03-03T10:00:00.000Z"
+  },
+  {
+    "id": "prod_104",
+    "name": "Smart Fitness Watch",
+    "category": "Electronics",
+    "price": 1500,
+    "stock": 50,
+    "rating": 4.2,
+    "createdAt": "2026-03-04T10:00:00.000Z"
+  },
+  {
+    "id": "prod_105",
+    "name": "Coffee Maker",
+    "category": "Home Appliances",
+    "price": 899,
+    "stock": 0,
+    "rating": 3.9,
+    "createdAt": "2026-03-05T10:00:00.000Z"
+  }
+]
