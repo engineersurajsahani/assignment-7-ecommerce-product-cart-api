@@ -5,6 +5,24 @@ REST API for a small online store. Data lives in JSON files under `data/`
 login uses `express-session` (cookie based, no JWT). Ships with a small plain
 HTML frontend in `public/`, served by the same server.
 
+## Live demo
+
+https://assignment-7-ecommerce-product-cart-api-5xit.onrender.com
+
+The shop UI and the API run as one Render web service on the free tier:
+
+- The first visit after a period of inactivity can take up to a minute while
+  the server wakes up.
+- The free tier has no persistent disk, so `data/*.json` goes back to the
+  committed seed data whenever the server restarts, redeploys or wakes up.
+  New accounts, carts, orders and product edits are temporary; the seeded
+  accounts below always work.
+- Sessions are kept in memory, so a restart also logs everyone out.
+
+Deployed with root directory `Ashutosh_Pawar_150096725130`, build
+`npm install`, start `npm start`, and `SESSION_SECRET` set in the Render
+environment. Render provides `PORT`.
+
 ## Setup
 
 ```bash
