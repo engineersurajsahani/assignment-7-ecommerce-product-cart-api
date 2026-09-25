@@ -1,10 +1,11 @@
 {
   "name": "ashutosh_pawar_150096725130",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "E-Commerce product catalog and shopping cart API with JSON file storage and session auth",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +20,10 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.14"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "data/*"
+    ]
   }
 }

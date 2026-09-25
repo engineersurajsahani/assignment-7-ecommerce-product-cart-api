@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <h1>🛒 E-Commerce Store</h1>
+
+    <div id="nav"></div>
+
+    <br />
+
+    <div>
+      <label for="search">Search : </label>
+      <input type="text" id="search" placeholder="name or category" />
+
+      <label for="category">Category : </label>
+      <select id="category">
+        <option value="">All</option>
+      </select>
+    </div>
+
+    <br />
+
+    <div>
+      <label for="minPrice">Min Price : </label>
+      <input type="number" id="minPrice" min="0" style="width: 80px" />
+
+      <label for="maxPrice">Max Price : </label>
+      <input type="number" id="maxPrice" min="0" style="width: 80px" />
+
+      <label for="sort">Sort : </label>
+      <select id="sort">
+        <option value="">Default</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="rating_desc">Top Rated</option>
+        <option value="name_asc">Name A-Z</option>
+        <option value="newest">Newest</option>
+      </select>
+
+      <label>
+        <input type="checkbox" id="inStock" /> In stock only
+      </label>
+    </div>
+
+    <br />
+
+    <div>
+      <button onclick="loadProducts()">SEARCH</button>
+      <button onclick="clearFilters()">SHOW ALL</button>
+      <span id="count"></span>
+    </div>
+
+    <br />
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Rating</th>
+          <th id="action-head">ACTION</th>
+        </tr>
+      </thead>
+      <tbody id="product-rows"></tbody>
+    </table>
+
+    <script>
+      let user = null;
+
+      function loadCategories() {
+        callApi("/products/categories")
+          .then(({ data }) => {
+            const select = document.getElementById("category");
+            data.categories.forEach((category) => {
+              const option = document.createElement("option");
+              option.value = category;
+              option.textContent = category;
+              select.appendChild(option);
+            });
+          })
+          .catch((error) => console.log(error));
+      }
+
+      function loadProducts() {
+        const params = new URLSearchParams();
+        const search = document.getElementById("search").value.trim();
+        const category = document.getElementById("category").value;
+        const minPrice = document.getElementById("minPrice").value;
+        const maxPrice = document.getElementById("maxPrice").value;
+        const sort = document.getElementById("sort").value;
+        const inStock = document.getElementById("inStock").checked;
+
+        if (search) params.set("search", search);
+        if (category) params.set("category", category);
+        if (minPrice) params.set("minPrice", minPrice);
+        if (maxPrice) params.set("maxPrice", maxPrice);
+        if (sort) params.set("sort", sort);
+        if (inStock) params.set("inStock", "true");
+        const query = params.toString() ? `?${params.toString()}` : "";
+
+        callApi(`/products${query}`)
+          .then(({ response, data }) => {
+            console.log(data);
+
+            if (response.status !== 200) {
+              showError(data.message || "could not load products!");
+              return;
+            }
+
+            document.getElementById("count").textContent =
+              `${data.count} product(s)`;
+
+            const rows = document.getElementById("product-rows");
+            rows.innerHTML = "";
+
+            data.products.forEach((product) => {
+              const tr = document.createElement("tr");
+
+              [
+                product.name,
+                product.category,
+                rupees(product.price),
+                product.stock > 0 ? product.stock : "Out of stock",
+                `⭐ ${product.rating}`,
+              ].forEach((value) => {
+                const td = document.createElement("td");
+                td.textContent = value;
+                tr.appendChild(td);
+              });
+
+              if (user) {
+                const td = document.createElement("td");
+
+                const qty = document.createElement("input");
+                qty.type = "number";
+                qty.min = "1";
+                qty.value = "1";
+                qty.style.width = "50px";
+                td.appendChild(qty);
+
+                td.appendChild(
+                  makeButton(
+                    "ADD TO CART",
+                    () => addToCart(product.id, Number(qty.value)),
+                    product.stock <= 0,
+                  ),
+                );
+
+                if (user.role === "admin") {
+                  td.appendChild(
+                    makeButton("EDIT", () => {
+                      location.href = `product-form.html?id=${product.id}`;
+                    }),
+                  );
+                  td.appendChild(makeButton("DELETE", () => remove(product.id)));
+                }
+                tr.appendChild(td);
+              }
+
+              rows.appendChild(tr);
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            showError("could not reach the server!");
+          });
+      }
+
+      function clearFilters() {
+        ["search", "category", "minPrice", "maxPrice", "sort"].forEach((id) => {
+          document.getElementById(id).value = "";
+        });
+        document.getElementById("inStock").checked = false;
+        loadProducts();
+      }
+
+      function addToCart(productId, quantity) {
+        callApi("/cart/items", "POST", { productId, quantity })
+          .then(({ response, data }) => {
+            if (handleUnauthorized(response, data)) return;
+            if (response.status === 200) {
+              showSuccess(`added! cart total: ${rupees(data.cart.cartTotal)}`);
+            } else {
+              showError(data.message || "could not add to cart!");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            showError("could not reach the server!");
+          });
+      }
+
+      function remove(id) {
+        Swal.fire({
+          icon: "warning",
+          title: "Are you sure?",
+          text: "this product will be removed from the store",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it",
+        }).then((result) => {
+          if (!result.isConfirmed) return;
+
+          callApi(`/products/${id}`, "DELETE")
+            .then(({ response, data }) => {
+              if (handleUnauthorized(response, data)) return;
+              if (response.status === 200) {
+                showSuccess("product deleted");
+                loadProducts();
+              } else {
+                showError(data.message || "Something went wrong!");
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+              showError("could not reach the server!");
+            });
+        });
+      }
+
+      getUser().then((current) => {
+        user = current;
+        renderNav(user);
+        // only logged-in users get an action column
+        document.getElementById("action-head").style.display = user ? "" : "none";
+        loadCategories();
+        loadProducts();
+      });
+    </script>
+  </body>
+</html>

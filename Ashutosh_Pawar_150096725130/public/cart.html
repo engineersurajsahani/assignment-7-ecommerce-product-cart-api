@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Cart</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <h1>🛍️ My Cart</h1>
+
+    <div id="nav"></div>
+
+    <br />
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Unit Price</th>
+          <th>Quantity</th>
+          <th>Item Total</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody id="cart-rows"></tbody>
+    </table>
+
+    <p>Subtotal : <b id="subtotal">-</b></p>
+    <p>Discount : <b id="discount">-</b> <small>(10% off on ₹5,000 or more)</small></p>
+    <p>To Pay : <b id="payable">-</b></p>
+
+    <button id="checkout-btn" onclick="checkout()">CHECKOUT</button>
+
+    <script>
+      function loadCart() {
+        callApi("/cart")
+          .then(({ response, data }) => {
+            console.log(data);
+            if (handleUnauthorized(response, data)) return;
+
+            const cart = data.cart;
+            const rows = document.getElementById("cart-rows");
+            rows.innerHTML = "";
+
+            if (cart.items.length === 0) {
+              rows.innerHTML = `<tr><td colspan="5">cart is empty</td></tr>`;
+            }
+
+            cart.items.forEach((item) => {
+              const tr = document.createElement("tr");
+
+              [
+                item.name,
+                rupees(item.unitPrice),
+                item.quantity,
+                rupees(item.itemTotal),
+              ].forEach((value) => {
+                const td = document.createElement("td");
+                td.textContent = value;
+                tr.appendChild(td);
+              });
+
+              const td = document.createElement("td");
+              td.appendChild(makeButton("REMOVE", () => removeItem(item.productId)));
+              tr.appendChild(td);
+
+              rows.appendChild(tr);
+            });
+
+            document.getElementById("subtotal").textContent = rupees(cart.cartTotal);
+            document.getElementById("discount").textContent = rupees(cart.discount);
+            document.getElementById("payable").textContent = rupees(cart.payable);
+            document.getElementById("checkout-btn").disabled = cart.items.length === 0;
+          })
+          .catch((error) => {
+            console.log(error);
+            showError("could not load cart!");
+          });
+      }
+
+      function removeItem(productId) {
+        callApi(`/cart/items/${productId}`, "DELETE")
+          .then(({ response, data }) => {
+            if (handleUnauthorized(response, data)) return;
+            if (response.status === 200) {
+              loadCart();
+            } else {
+              showError(data.message || "could not remove!");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            showError("could not reach the server!");
+          });
+      }
+
+      function checkout() {
+        callApi("/cart/checkout", "POST")
+          .then(({ response, data }) => {
+            if (handleUnauthorized(response, data)) return;
+            if (response.status === 200) {
+              showSuccess(
+                `order ${data.order.orderId} placed! paid ${rupees(data.order.payable)}`,
+              ).then(() => {
+                location.href = "orders.html";
+              });
+            } else {
+              showError(data.message || "checkout failed!");
+              loadCart();
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            showError("could not reach the server!");
+          });
+      }
+
+      getUser().then((user) => {
+        renderNav(user);
+        loadCart(); // a 401 here sends a logged-out visitor to login
+      });
+    </script>
+  </body>
+</html>
