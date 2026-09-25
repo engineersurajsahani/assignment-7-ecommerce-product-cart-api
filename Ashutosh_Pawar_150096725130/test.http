@@ -1,0 +1,102 @@
+# VS Code REST Client keeps cookies between requests, so after "Login" the
+# session cookie is sent automatically on every request below.
+
+### Register a customer
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "sam",
+  "email": "sam@shop.com",
+  "password": "password123"
+}
+
+### Login as customer (seeded: alex@shop.com / password123)
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "alex@shop.com",
+  "password": "password123"
+}
+
+### Who am I
+GET http://localhost:5000/api/auth/me
+
+### List products -- filter + sort
+GET http://localhost:5000/api/products?category=Electronics&minPrice=1000&maxPrice=5000&sort=price_asc
+
+### Search + in stock only
+GET http://localhost:5000/api/products?search=jacket&inStock=true
+
+### Categories
+GET http://localhost:5000/api/products/categories
+
+### Single product
+GET http://localhost:5000/api/products/prod_101
+
+### Add to cart
+POST http://localhost:5000/api/cart/items
+Content-Type: application/json
+
+{
+  "productId": "prod_101",
+  "quantity": 2
+}
+
+### Add more than stock -> 400 Insufficient stock (prod_103 has 3)
+POST http://localhost:5000/api/cart/items
+Content-Type: application/json
+
+{
+  "productId": "prod_103",
+  "quantity": 10
+}
+
+### View cart
+GET http://localhost:5000/api/cart
+
+### Remove from cart
+DELETE http://localhost:5000/api/cart/items/prod_101
+
+### Checkout (stock in data/products.json goes down)
+POST http://localhost:5000/api/cart/checkout
+
+### My orders
+GET http://localhost:5000/api/cart/orders
+
+### Logout
+POST http://localhost:5000/api/auth/logout
+
+### Login as admin (seeded: admin@shop.com / admin123)
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@shop.com",
+  "password": "admin123"
+}
+
+### Create product (admin)
+POST http://localhost:5000/api/products
+Content-Type: application/json
+
+{
+  "name": "Gaming Mouse",
+  "category": "Electronics",
+  "price": 1499,
+  "stock": 25,
+  "rating": 4.5
+}
+
+### Update price / stock (admin)
+PUT http://localhost:5000/api/products/prod_101
+Content-Type: application/json
+
+{
+  "stock": 30,
+  "price": 1799
+}
+
+### Delete product (admin)
+DELETE http://localhost:5000/api/products/prod_501
