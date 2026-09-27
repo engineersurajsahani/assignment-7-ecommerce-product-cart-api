@@ -1,0 +1,31 @@
+{
+  "name": "harsh-assignment-7-ecommerce-product-cart-api",
+  "version": "1.0.0",
+  "description": "> **Track:** Backend Development | **Level:** Beginner to Intermediate | **Estimated Time:** 5–7 Hours   > **Tech Stack:** Node.js, Express.js, JSON / File-System Data Storage (`fs/promises`), bcryptjs, Express-Session",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js", "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harsh4421/Harsh-Assignment-7-Ecommerce-Product-Cart-Api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/harsh4421/Harsh-Assignment-7-Ecommerce-Product-Cart-Api/issues"
+  },
+  "homepage": "https://github.com/harsh4421/Harsh-Assignment-7-Ecommerce-Product-Cart-Api#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "uuid": "^14.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
