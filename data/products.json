@@ -1,0 +1,37 @@
+[
+  {
+    "id": "1",
+    "name": "Wireless Headphones",
+    "category": "Electronics",
+    "price": 2499,
+    "stock": 15
+  },
+  {
+    "id": "2",
+    "name": "Mechanical Keyboard",
+    "category": "Electronics",
+    "price": 3499,
+    "stock": 10
+  },
+  {
+    "id": "3",
+    "name": "Running Shoes",
+    "category": "Fashion",
+    "price": 2999,
+    "stock": 8
+  },
+  {
+    "id": "4",
+    "name": "Cotton T-Shirt",
+    "category": "Fashion",
+    "price": 799,
+    "stock": 25
+  },
+  {
+    "id": "5",
+    "name": "Water Bottle",
+    "category": "Home",
+    "price": 499,
+    "stock": 30
+  }
+]
